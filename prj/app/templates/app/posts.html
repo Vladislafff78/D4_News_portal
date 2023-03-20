@@ -1,0 +1,23 @@
+{% extends 'app/default.html' %}
+{% load custom_filters %}
+{% block title %}
+{{title|censor}}
+{% endblock %}
+{% block content %}
+{% for el in post %}
+<br>
+    <div class="alert alert-info">
+        <div class="container">
+            {% if el.post_photo %}
+            <img src="{{el.post_photo.url}}" align="right" width="20%">
+            {% endif %}
+            <h5><a href="{{ el.get_absolute_url }}">{{ el.post_title|censor }}</a></h5>
+            <p>{% filter censor|linebreaks|truncatewords:20 %}{{ el.post_text }}{% endfilter %}</p>
+            <em><b>{{ el.post_author.author_user.username}} </b> {{ el.post_date|date:"d.m.Y H:i" }} {{el.post_category}}</em>
+        </div>
+
+    </div>
+
+    {% endfor %}
+
+{% endblock %}
