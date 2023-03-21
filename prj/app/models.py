@@ -31,8 +31,8 @@ class Post(models.Model):
     CATEGORY_CHOICES = ((NEWS, 'Новость'), (ARTICLE, 'Статья'))
     type_category = models.CharField(max_length=2, choices=CATEGORY_CHOICES, default=ARTICLE)
 
-    post_title = models.CharField('Заголовок поста', max_length=64)
-    post_text = models.TextField('Текст поста', max_length=512)
+    post_title = models.CharField('Заголовок поста', max_length=128)
+    post_text = models.TextField('Текст поста', max_length=2048)
     post_author = models.ForeignKey(Author, on_delete=models.CASCADE)
     post_category = models.ManyToManyField(Category, through='PostCategory')
     post_rating = models.SmallIntegerField(default=0)
@@ -49,7 +49,7 @@ class Post(models.Model):
         ordering = ['-post_date', 'post_title']
 
     def preview(self):
-        return self.post_text[0:124] + '...'
+        return self.post_text[0:470] + '...'
 
     def like(self):
         self.post_rating += 1

@@ -1,9 +1,25 @@
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.shortcuts import render, get_object_or_404
-from django.views.generic import (CreateView)
+from django.views.generic import ListView, CreateView
 
 from .forms import PostForm
 from .models import Post
+
+
+def index(request):
+    return render(request, 'index.html')
+
+
+class PostsList(ListView):
+    model = Post
+    # ordering = 'posts'
+    template_name = 'posts.html'
+    context_object_name = 'post'
+    paginate_by = 2
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
 
 
 class CreatePost(PermissionRequiredMixin, CreateView):
@@ -17,15 +33,6 @@ class CreatePost(PermissionRequiredMixin, CreateView):
     def form_valid(self, form):
         form.instance.post_author = self.request.user.author
         return super().form_valid(form)
-
-
-def index(request):
-    return render(request, 'index.html')
-
-
-def posts(request):
-    post = Post.objects.order_by('-id')
-    return render(request, 'posts.html', {'title': 'Новостной портал - Статьи', 'post': post})
 
 
 def show_post(request, post_id):

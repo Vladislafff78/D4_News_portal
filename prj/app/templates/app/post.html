@@ -5,16 +5,16 @@
 {% endblock %}
 {% block content %}
 <br>
-
-    <div class="alert alert-info">
-        <div class="container">
-             <h5>{{ post_title|censor }}</h5>
-            {% if post_photo %}
-            <img src="{{post_photo.url}}" align="right" width='55%' >
-            {% endif %}
-            <p>{% filter censor|linebreaks %}{{ post_text}}{% endfilter %}</p>
-            <em><b>{{ post_author_id}} </b> {{ post_date|date:"d.m.Y H:i" }}</em>
-        </div>
+<div class="card">
+    <h5 class="card-header">{{ post_title }}</h5>
+    <div class="card-body">
+        {% if post_photo %}
+        <img src="{{post_photo.url}}" align="right" width="40%">
+        {% endif %}
+        <p class="card-text">{% filter censor|linebreaks %}{{ post_text }}{% endfilter %}</p>
+        <em><b>{{ post_author.author_user.username}} </b> {{ post_date|date:"d.m.Y H:i" }}</em>
     </div>
+</div>
+<br>
 
 {% endblock %}

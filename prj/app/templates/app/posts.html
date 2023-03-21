@@ -4,20 +4,51 @@
 {{title|censor}}
 {% endblock %}
 {% block content %}
+
 {% for el in post %}
 <br>
-    <div class="alert alert-info">
-        <div class="container">
-            {% if el.post_photo %}
-            <img src="{{el.post_photo.url}}" align="right" width="20%">
-            {% endif %}
-            <h5><a href="{{ el.get_absolute_url }}">{{ el.post_title|censor }}</a></h5>
-            <p>{% filter censor|linebreaks|truncatewords:20 %}{{ el.post_text }}{% endfilter %}</p>
-            <em><b>{{ el.post_author.author_user.username}} </b> {{ el.post_date|date:"d.m.Y H:i" }} {{el.post_category}}</em>
-        </div>
-
+<div class="card">
+    <h5 class="card-header">{{ el.post_title }}</h5>
+    <div class="card-body">
+        {% if el.post_photo %}
+        <img src="{{el.post_photo.url}}" align="right" width="20%">
+        {% endif %}
+        <p class="card-text">{{ el.preview }}</p>
+        <a href="{{ el.get_absolute_url }}" class="btn btn-secondary btn-sm">Читать полностью</a>ㅤ
+        <em><b>{{ el.post_author.author_user.username}} </b> {{ el.post_date|date:"d.m.Y H:i" }}</em>
     </div>
+</div>
+<br>
+{% endfor %}
 
-    {% endfor %}
+<br>
+<nav aria-label="Page navigation example">
+
+    <ul class="pagination justify-content-center">
+
+        <ul class="pagination pagination-sm">
+
+            {% if page_obj.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page=1">1</a></li>
+            <li class="page-item disabled"><a class="page-link">...</a></li>
+            {% endif %}
+
+            {% for p in paginator.page_range %}
+            {% if page_obj.number == p %}
+            <li class="page-item active"><a class="page-link"><span class="sr-only">{{ p }}</span></a></li>
+            {% elif p >= page_obj.number|add:-1 and p <= page_obj.number|add:1 %}
+            <li class="page-item"><a class="page-link" href="?page={{ p }}">{{ p }}</a></li>
+
+            {% endif %}
+            {% endfor %}
+
+            {% if page_obj.has_next %}
+            <li class="page-item disabled"><a class="page-link">...</a></li>
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">{{page_obj.paginator.num_pages }}</a></li>
+            {% endif %}
+
+    </ul>
+    </ul>
+</nav>
 
 {% endblock %}
