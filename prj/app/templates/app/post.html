@@ -1,20 +1,36 @@
 {% extends 'app/default.html' %}
-{% block title %}
 {% load custom_filters %}
+
+{% block title %}
 {{post_title|censor}}
 {% endblock %}
 {% block content %}
 <br>
 <div class="card">
-    <h5 class="card-header">{{ post_title }}</h5>
+    <h5 class="card-header">{{ post.type_category }} / {{ post_title }}</h5>
     <div class="card-body">
         {% if post_photo %}
         <img src="{{post_photo.url}}" align="right" width="40%">
         {% endif %}
-        <p class="card-text">{% filter censor|linebreaks %}{{ post_text }}{% endfilter %}</p>
-        <em><b>{{ post_author.author_user.username}} </b> {{ post_date|date:"d.m.Y H:i" }}</em>
+        <p class="card-text">{% filter censor|linebreaks %}{{ post_text }}{% endfilter %}
+            <em><b>{{ post_author.author_user.username}} </b> {{ post_date|date:"d.m.Y H:i" }}</em>
+
+
+            {% if perms.app.change_post %}
+            <a href="edit/" class="btn btn-secondary btn-sm">Редактировать</a>
+            {% endif %}
+
+            {% if perms.app.delete_post %}
+            <a href="delete/" class="btn btn-secondary btn-sm">Удалить</a>
+            {% endif %}
+        </p>
+        {{ post.type_category }} /
+        {% for cat in post.post_category.all %}
+        {{ cat.name }}
+        {% endfor %}
     </div>
 </div>
+
 <br>
 
 {% endblock %}

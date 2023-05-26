@@ -1,9 +1,28 @@
 {% extends 'app/default.html' %}
 {% load custom_filters %}
 {% block title %}
-{{title|censor}}
+{% if request.path == '/articles/' %}
+Статьи
+{% else %}
+Новости
+{% endif %}
 {% endblock %}
 {% block content %}
+<br>
+<div class="container">
+    <form class="d-flex" action="" method="get">
+        {{ filterset.form.as_p }} ⠀⠀⠀⠀⠀ ⠀⠀⠀⠀⠀
+        <button class="btn btn-secondary " type="submit">Найти</button>
+    </form>
+</div>
+
+<br>
+{% if request.path == '/articles/' %}
+    <a href="{% url 'articles_create' %}" class="btn btn-secondary btn-sm">Добавить СТАТЬЮ</a>
+{% else %}
+    <a href="{% url 'news_create' %}" class="btn btn-secondary btn-sm">Добавить НОВОСТЬ</a>ㅤ
+{% endif %}
+<br>
 
 {% for el in post %}
 <br>
@@ -11,15 +30,21 @@
     <h5 class="card-header">{{ el.post_title }}</h5>
     <div class="card-body">
         {% if el.post_photo %}
-        <img src="{{el.post_photo.url}}" align="right" width="20%">
+        <img src="{{el.post_photo.url}}" align="right" width="17%">
         {% endif %}
         <p class="card-text">{{ el.preview }}</p>
-        <a href="{{ el.get_absolute_url }}" class="btn btn-secondary btn-sm">Читать полностью</a>ㅤ
-        <em><b>{{ el.post_author.author_user.username}} </b> {{ el.post_date|date:"d.m.Y H:i" }}</em>
+        <p> <a href="{{ el.get_absolute_url }}" class="btn btn-secondary btn-sm">Читать полностью</a>ㅤ
+            <em><b>{{ el.post_author.author_user.username}} </b> {{ el.post_date|date:"d.m.Y H:i" }}</em></p>
+
+        {{ el.type_category }} /
+        {% for cat in el.post_category.all %}
+        {{ cat.name }}
+        {% endfor %}
     </div>
 </div>
-<br>
 {% endfor %}
+
+
 
 <br>
 <nav aria-label="Page navigation example">

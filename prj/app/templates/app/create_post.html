@@ -1,17 +1,24 @@
 {% extends 'app/default.html' %}
 
 {% block title %}
-Создать новую статью
+Добавить материал
 {% endblock %}
 
 {% block content %}
 <br>
-<h4> Создать новую статью </h4>
+{% if request.path == '/articles/create/' %}
+<h4> Публикация СТАТЬИ </h4>
+{% else %}
+<h4> Публикация НОВОСТИ </h4>
+{% endif %}
+
 <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{form.post_title}}<br>
     {{form.post_text}}<br>
     {{form.post_photo}}<br><br>
+    {{form.post_category}}<br><br>
+
     <button type="submit" class="btn btn-success">Добавить</button>
 </form>
 {% endblock %}
