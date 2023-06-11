@@ -27,6 +27,7 @@ class Author(models.Model):
 
 class Category(models.Model):
     name = models.CharField(max_length=64, unique=True, verbose_name='Категория')
+    subscribers = models.ManyToManyField(User, related_name='category')
 
     def __str__(self):
         return self.name
@@ -50,7 +51,6 @@ class Post(models.Model):
 
     def __str__(self):
         return self.post_title
-
 
     class Meta:
         verbose_name = 'Пост'

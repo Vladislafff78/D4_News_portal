@@ -10,15 +10,12 @@
 {% block content %}
 
 <br>
-{% if request.path == '/articles/' %}
-<a href="{% url 'articles_create' %}" class="btn btn-secondary btn-sm">Добавить СТАТЬЮ</a>
-{% else %}
-<a href="{% url 'news_create' %}" class="btn btn-secondary btn-sm">Добавить НОВОСТЬ</a>ㅤ
+{% if is_not_subscriber %}
+   <h5 class="text-center"> {{ category }} <a href="{}" class="btn btn-secondary btn"> Подписаться </a></h5>
 {% endif %}
 <br>
 
-{% for el in post %}
-<br>
+{% for el in category_news_list %}
 <div class="card">
     <h5 class="card-header">{{ el.post_title }}</h5>
     <div class="card-body">
@@ -26,12 +23,12 @@
         <img src="{{el.post_photo.url}}" align="right" width="17%">
         {% endif %}
         <p class="card-text">{{ el.preview }}</p>
-        <p><a href="{{ el.get_absolute_url }}" class="btn btn-secondary btn-sm">Читать полностью</a>ㅤ
+        <p> <a href="{{ el.get_absolute_url }}" class="btn btn-secondary btn-sm">Читать полностью</a>ㅤ
             <em><b>{{ el.post_author.author_user.username}} </b> {{ el.post_date|date:"d.m.Y H:i" }}</em></p>
 
         {{ el.type_category}} /
         {% for category in el.post_category.all %}
-        <a href="{% url 'category' category.id %}">{{ category }}</a>
+            <a href= "{% url 'category' category.id %}">{{ category }}</a>
         {% endfor %}
     </div>
 </div>
@@ -60,20 +57,11 @@
 
             {% if page_obj.has_next %}
             <li class="page-item disabled"><a class="page-link">...</a></li>
-            <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">
-                {{page_obj.paginator.num_pages}}</a></li>
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">{{page_obj.paginator.num_pages }}</a></li>
             {% endif %}
 
-        </ul>
+    </ul>
     </ul>
 </nav>
 
-<br>
-<div class="container">
-    <form class="d-flex" action="" method="get">
-        {{ filterset.form.as_p }} ⠀⠀⠀⠀⠀ ⠀⠀⠀⠀⠀
-        <button class="btn btn-secondary " type="submit">Найти</button>
-    </form>
-</div>
-<br>
 {% endblock %}

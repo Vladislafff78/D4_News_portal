@@ -119,3 +119,20 @@ def show_post(request, post_id):
     }
 
     return render(request, 'app/post.html', context=context)
+
+
+class CategoryListView(ListView):
+    model = Post
+    template_name = 'category.html'
+    context_object_name = 'category_news_list'
+
+    def get_queryset(self):
+        self.category = get_object_or_404(Category, id=self.kwargs['pk'])
+        queryset = Post.objects.filter(post_category=self.category)
+        return queryset
+
+    def get_context_data(self,  **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['is_not_subscriber'] = self.request.user not in self.category.subscribers.all()
+        context['category'] = self.category
+        return context
